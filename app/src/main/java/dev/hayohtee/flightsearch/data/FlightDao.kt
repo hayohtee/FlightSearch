@@ -12,7 +12,7 @@ interface FlightDao {
     fun searchAirports(query: String): Flow<List<Airport>>
 
     @Query("SELECT * FROM airport WHERE iata_code = :iataCode")
-    suspend fun getAirport(iataCode: String): Flow<Airport>
+    fun getAirport(iataCode: String): Flow<Airport>
 
     @Query("SELECT * FROM airport WHERE iata_code != :iataCode")
     fun getDestinations(iataCode: String): Flow<List<Airport>>
