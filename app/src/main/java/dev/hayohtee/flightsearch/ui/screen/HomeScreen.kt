@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import dev.hayohtee.flightsearch.R
 import dev.hayohtee.flightsearch.data.model.Airport
 import dev.hayohtee.flightsearch.ui.components.AirportSuggestions
+import dev.hayohtee.flightsearch.ui.components.FavouriteRoutes
 import dev.hayohtee.flightsearch.ui.components.FlightDestinations
 import dev.hayohtee.flightsearch.ui.theme.FlightSearchTheme
 
@@ -43,6 +44,7 @@ fun HomeScreen(
     uiState: UiState,
     onSearchAirportChange: (String) -> Unit,
     onAirportSuggestionClick: (Airport) -> Unit,
+    onFavouriteClick: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var hideKeyboard by remember { mutableStateOf(false) }
@@ -64,6 +66,13 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                if (uiState.airportSearchText.isBlank() && uiState.favouriteRoutes.isNotEmpty()) {
+                    FavouriteRoutes(
+                        routes = uiState.favouriteRoutes,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 if (!uiState.showDestinations) {
                     AirportSuggestions(
                         airports = uiState.airportSuggestions,
@@ -78,7 +87,8 @@ fun HomeScreen(
                     FlightDestinations(
                         departure = uiState.selectedAirport,
                         destinations = uiState.destinations,
-                        onFavouriteClick = { _, _ ->
+                        onFavouriteClick = { departureIataCode, destinationIataCode ->
+                            onFavouriteClick(departureIataCode, destinationIataCode)
                             hideKeyboard = true
                         }
                     )
@@ -153,7 +163,8 @@ fun HomeScreenPreview() {
         HomeScreen(
             uiState = UiState(),
             onSearchAirportChange = {},
-            onAirportSuggestionClick = {}
+            onAirportSuggestionClick = {},
+            onFavouriteClick = { _, _ -> },
         )
     }
 }
