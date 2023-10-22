@@ -30,4 +30,10 @@ class OfflineFlightRepository(private val flightDao: FlightDao): FlightRepositor
             flightDao.getFavoriteAirports()
         }
     }
+
+    override suspend fun saveFavourite(favorite: Favorite) {
+        withContext(Dispatchers.IO) {
+            flightDao.insertFavourite(favorite)
+        }
+    }
 }

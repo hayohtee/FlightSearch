@@ -1,6 +1,8 @@
 package dev.hayohtee.flightsearch.data
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import dev.hayohtee.flightsearch.data.model.Airport
 import dev.hayohtee.flightsearch.data.model.Favorite
@@ -19,4 +21,7 @@ interface FlightDao {
 
     @Query("SELECT * FROM favorite")
     fun getFavoriteAirports(): Flow<List<Favorite>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavourite(favorite: Favorite)
 }

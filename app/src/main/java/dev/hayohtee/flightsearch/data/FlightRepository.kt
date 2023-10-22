@@ -9,4 +9,5 @@ interface FlightRepository {
     suspend fun getAirport(iataCode: String): Flow<Airport>
     suspend fun getDestinations(iataCode: String): Flow<List<Airport>>
     suspend fun getFavoriteAirports(): Flow<List<Favorite>>
+    suspend fun saveFavourite(favorite: Favorite)
 }

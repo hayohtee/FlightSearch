@@ -14,6 +14,7 @@ fun FlightSearchApp(modifier: Modifier = Modifier) {
         uiState = viewModel.uiState,
         onSearchAirportChange = viewModel::searchAirports,
         onAirportSuggestionClick = viewModel::getDestinations,
+        onFavouriteClick = viewModel::saveFavourite,
         modifier = modifier
     )
 }

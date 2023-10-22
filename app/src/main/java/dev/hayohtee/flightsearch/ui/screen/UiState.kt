@@ -7,5 +7,6 @@ data class UiState(
     val airportSuggestions: List<Airport> = emptyList(),
     val destinations: List<Airport> = emptyList(),
     val selectedAirport: Airport? = null,
+    val favouriteRoutes: List<Pair<Airport, Airport>> = emptyList(),
     val showDestinations: Boolean = false
 )
