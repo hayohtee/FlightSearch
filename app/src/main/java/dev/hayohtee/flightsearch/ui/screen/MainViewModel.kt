@@ -12,11 +12,28 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.hayohtee.flightsearch.FlightSearchApplication
 import dev.hayohtee.flightsearch.data.FlightRepository
 import dev.hayohtee.flightsearch.data.model.Airport
+import dev.hayohtee.flightsearch.data.model.Favorite
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val flightRepository: FlightRepository) : ViewModel() {
     var uiState: UiState by mutableStateOf(UiState())
         private set
+
+    init {
+        viewModelScope.launch {
+            flightRepository.getFavoriteAirports().map { favourites ->
+                favourites.map { favourite ->
+                    val departure = flightRepository.getAirport(favourite.departureCode).first()
+                    val destination = flightRepository.getAirport(favourite.destinationCode).first()
+                    Pair(departure, destination)
+                }
+            }.collect {
+                uiState = uiState.copy(favouriteRoutes = it)
+            }
+        }
+    }
 
     fun searchAirports(query: String) {
         uiState = uiState.copy(airportSearchText = query, showDestinations = false)
@@ -41,6 +58,17 @@ class MainViewModel(private val flightRepository: FlightRepository) : ViewModel(
                     showDestinations = true
                 )
             }
+        }
+    }
+
+    fun saveFavourite(departureIataCode: String, destinationIataCode: String) {
+        viewModelScope.launch {
+            flightRepository.saveFavourite(
+                Favorite(
+                    departureCode = departureIataCode,
+                    destinationCode = destinationIataCode
+                )
+            )
         }
     }
 
